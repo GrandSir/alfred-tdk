@@ -6,17 +6,9 @@ from lib import requests
 args = sys.argv[1]
 
 def tdk(message) -> str:
-    search_message = message.lower().strip()
-    r = requests.get(f"https://sozluk.gov.tr/gts?ara={search_message}")
-    r_content = r.json()
-    
-    meanings = [i["anlamlarListe"][0]["anlam"] for i in r_content]
-
-    if len(meanings) >= 2:
-        return ", ".join((meanings[0], meanings[1]))
-        
-    else:
-        return meanings[0]
+    meanings = [i["anlamlarListe"][0]["anlam"] for i in requests.get(f"https://sozluk.gov.tr/gts?ara={message.lower().strip()}").json()]
+    return ", ".join((meanings[0], meanings[1])) if len(meanings) >= 2 else meanings[0]
+ 
 meaning = tdk(args)
 
 try:
